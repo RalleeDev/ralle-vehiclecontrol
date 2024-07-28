@@ -1,7 +1,7 @@
 Config = {}
 
 -- ToggleEngine Feature
-Config.toggleEngine = false -- Set to true if you want toggleEngine enabled, Set to false if you dont
+Config.toggleEngine = true -- Set to true if you want toggleEngine enabled, Set to false if you dont
 Config.toggleEngineCommand = 'toggleEngine' -- The name of the toggleEngine command
 Config.toggleEngineKey = 'Y' -- https://docs.fivem.net/docs/game-references/input-mapper-parameter-ids/keyboard/
 
@@ -11,5 +11,5 @@ Config.IndicatorKeys = {'F1', 'F3', 'F4'} -- The keys for triggering the indicat
 
 -- CruiseControl Feature
 Config.CruiseControl = true -- Wether or not you want CruiseControl Enabled
-Config.CruiseControlCommand = 'CruiseControl' -- The command to trigger cruisecontrol
+Config.CruiseControlCommand = 'cruisecontrol' -- The command to trigger cruisecontrol
 Config.CruiseControlKey = 'CAPITAL' -- The default keybind for cruisecontrol. Can be changed at Settings > Key Bindings > Fivem > Cruise Control Toggle

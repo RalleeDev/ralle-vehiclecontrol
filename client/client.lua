@@ -1,13 +1,22 @@
+function IsInDriverSeat(player, vehicle)
+    if GetPedInVehicleSeat(vehicle, -1) == player then
+        return true
+    end
+end
+
 if Config.toggleEngine == true then
     RegisterCommand(Config.toggleEngineCommand, function (source, args, rawCommand)
         local playerPed = PlayerPedId()
         local vehicle = GetVehiclePedIsIn(playerPed, false)
         if vehicle > 0 then
-            local EngineRunning = GetIsVehicleEngineRunning(vehicle)
-            if EngineRunning == 1 then
-                SetVehicleEngineOn(vehicle, false, false, true)
-            else
-                SetVehicleEngineOn(vehicle, true, false, true)
+            local IsInDriverSeat = IsInDriverSeat(playerPed, vehicle)
+            if IsInDriverSeat == true then
+                local EngineRunning = GetIsVehicleEngineRunning(vehicle)
+                if EngineRunning == 1 then
+                    SetVehicleEngineOn(vehicle, false, false, true)
+                else
+                    SetVehicleEngineOn(vehicle, true, false, true)
+                end
             end
         end
     end, false)
@@ -62,19 +71,28 @@ if Config.Indicator == true then
     RegisterCommand('indicator:left', function(source, args, rawCommand)
         local player = PlayerPedId()
         local vehicle = GetVehiclePedIsIn(player, false)
-        Indicator(vehicle, 1)
+        local IsInDriverSeat = IsInDriverSeat(player, vehicle)
+        if IsInDriverSeat == true then
+            Indicator(vehicle, 1)
+        end
     end, false)
 
     RegisterCommand('indicator:right', function(source, args, rawCommand) -- Indicator right = 2
         local player = PlayerPedId()
         local vehicle = GetVehiclePedIsIn(player, false)
-        Indicator(vehicle, 0)
+        local IsInDriverSeat = IsInDriverSeat(player, vehicle)
+        if IsInDriverSeat == true then
+            Indicator(vehicle, 0)
+        end
     end, false)
 
     RegisterCommand('indicator:hazard', function(source, args, rawCommand) -- Indicator Hazard = 3
         local player = PlayerPedId()
         local vehicle = GetVehiclePedIsIn(player, false)
-        Indicator(vehicle, 'hazard')
+        local IsInDriverSeat = IsInDriverSeat(player, vehicle)
+        if IsInDriverSeat == true then
+            Indicator(vehicle, 'hazard')
+        end
     end, false)
 
     -- Register Keymappings for Indicators
@@ -83,22 +101,29 @@ if Config.Indicator == true then
     RegisterKeyMapping('indicator:hazard', 'Hazard Vehicle indicator', 'keyboard', 'F4')
 end
 
-local CruiseControl = false
+if Config.CruiseControl == true then
+    local IsCruiseControl = false
 
-RegisterCommand(Config.CruiseControlCommand, function (source, args, rawCommand)
-    local player = PlayerPedId()
-    local vehicle = GetVehiclePedIsIn(player, false)
-    if CruiseControl == false then
-        print(CruiseControl)
-        local CruiseControlSpeed = GetEntitySpeed(vehicle)
-        SetEntityMaxSpeed(vehicle, CruiseControlSpeed)
-        CruiseControl = true
-    else
-        local maxSpeed = GetVehicleHandlingFloat(vehicle, 'CHandlingData', 'fInitialDriveMaxFlatVel')
-        print(CruiseControl)
-        SetEntityMaxSpeed(vehicle, maxSpeed)
-        CruiseControl = false
-    end
-end, false)
+    RegisterCommand(Config.CruiseControlCommand, function (source, args, rawCommand)
+        local player = PlayerPedId()
+        local vehicle = GetVehiclePedIsIn(player, false)
+        local IsInDriverSeat = IsInDriverSeat(player, vehicle)
+        if IsInDriverSeat == true then
+            if IsCruiseControl == false then
+                local CruiseControlSpeed = GetEntitySpeed(vehicle)
+                SetEntityMaxSpeed(vehicle, CruiseControlSpeed)
+                IsCruiseControl = true
+            else
+                local maxSpeed = GetVehicleHandlingFloat(vehicle, 'CHandlingData', 'fInitialDriveMaxFlatVel')
+                SetEntityMaxSpeed(vehicle, maxSpeed)
+                IsCruiseControl = false
+            end
+        end
+    end, false)
 
-RegisterKeyMapping(Config.CruiseControlCommand, 'Cruise Control Toggle', 'keyboard', Config.CruiseControlKey)
+    RegisterKeyMapping(Config.CruiseControlCommand, 'Cruise Control Toggle', 'keyboard', Config.CruiseControlKey)
+end
+
+print(Config.CruiseControl)
+print(Config.CruiseControlCommand)
+print(Config.CruiseControlKey)
