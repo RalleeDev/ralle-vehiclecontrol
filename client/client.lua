@@ -29,3 +29,52 @@ Citizen.CreateThread(function ()
 end)
 
 RegisterKeyMapping('toggleEngine', 'Toggle Engine', 'keyboard', 'y')
+
+function Indicator(vehicle, indicator)
+    local indicatorState = GetVehicleIndicatorLights(vehicle)
+    print(indicatorState)
+    if indicator == 1 then -- Left indicator
+        if indicatorState == 1 then
+            SetVehicleIndicatorLights(vehicle, indicator, false)
+        else
+            SetVehicleIndicatorLights(vehicle, indicator, true)
+        end
+    elseif indicator == 0 then -- Right Indicator
+        if indicatorState == 2 then
+            SetVehicleIndicatorLights(vehicle, indicator, false)
+        else
+            SetVehicleIndicatorLights(vehicle, indicator, true)
+        end
+    elseif indicator == 'hazard' then
+        if indicatorState == 3 then
+            SetVehicleIndicatorLights(vehicle, 1, false)
+            SetVehicleIndicatorLights(vehicle, 0, false)
+        else
+            SetVehicleIndicatorLights(vehicle, 1, true)
+            SetVehicleIndicatorLights(vehicle, 0, true)
+        end
+    end
+end
+
+RegisterCommand('indicator:left', function(source, args, rawCommand)
+    local player = PlayerPedId()
+    local vehicle = GetVehiclePedIsIn(player, false)
+    Indicator(vehicle, 1)
+end, false)
+
+RegisterCommand('indicator:right', function(source, args, rawCommand) -- Indicator right = 2
+    local player = PlayerPedId()
+    local vehicle = GetVehiclePedIsIn(player, false)
+    Indicator(vehicle, 0)
+end, false)
+
+RegisterCommand('indicator:hazard', function(source, args, rawCommand) -- Indicator Hazard = 3
+    local player = PlayerPedId()
+    local vehicle = GetVehiclePedIsIn(player, false)
+    Indicator(vehicle, 'hazard')
+end, false)
+
+-- Register Keymappings for Indicators
+RegisterKeyMapping('indicator:left', 'Left vehicle indicator', 'keyboard', 'F1')
+RegisterKeyMapping('indicator:right', 'Right vehicle indicator', 'keyboard', 'F3')
+RegisterKeyMapping('indicator:hazard', 'Hazard Vehicle indicator', 'keyboard', 'F4')
