@@ -3,6 +3,9 @@ game 'gta5'
 
 author 'RalleeDev'
 description 'A Simple vehicle control for ox_core'
-version '0.0.3'
+version '0.0.4'
 
-client_script 'client/client.lua'
+client_scripts {
+    'config.lua',
+    'client/client.lua',
+}
