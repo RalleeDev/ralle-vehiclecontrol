@@ -78,3 +78,24 @@ end, false)
 RegisterKeyMapping('indicator:left', 'Left vehicle indicator', 'keyboard', 'F1')
 RegisterKeyMapping('indicator:right', 'Right vehicle indicator', 'keyboard', 'F3')
 RegisterKeyMapping('indicator:hazard', 'Hazard Vehicle indicator', 'keyboard', 'F4')
+
+
+local CruiseControl = false
+
+RegisterCommand('cruisecontrol', function (source, args, rawCommand)
+    local player = PlayerPedId()
+    local vehicle = GetVehiclePedIsIn(player, false)
+    if CruiseControl == false then
+        print(CruiseControl)
+        local CruiseControlSpeed = GetEntitySpeed(vehicle)
+        SetEntityMaxSpeed(vehicle, CruiseControlSpeed)
+        CruiseControl = true
+    else
+        local maxSpeed = GetVehicleHandlingFloat(vehicle, 'CHandlingData', 'fInitialDriveMaxFlatVel')
+        print(CruiseControl)
+        SetEntityMaxSpeed(vehicle, maxSpeed)
+        CruiseControl = false
+    end
+end, false)
+
+RegisterKeyMapping('cruisecontrol', 'Cruise Control Toggle', 'keyboard', 'CAPITAL')
